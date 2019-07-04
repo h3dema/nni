@@ -712,9 +712,7 @@ class RemoteMachineTrainingService implements TrainingService {
                     
                     if (trialJob.rmMeta !== undefined){
 
-                        // TODO cleanup
-                        this.log.info(`DEBUG: Trial ${trialJob.id} status == ${trialJob.status} on ${trialJob.rmMeta.ip}`);
-
+                        this.log.debug(`Trial ${trialJob.id} status == ${trialJob.status} on ${trialJob.rmMeta.ip}`);
                         trialJob.rmMeta.runningExperiment = undefined;
                     }
 

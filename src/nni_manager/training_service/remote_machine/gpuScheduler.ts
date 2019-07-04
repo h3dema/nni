@@ -192,14 +192,13 @@ export class GPUScheduler {
 
                 if (rmMetas[i].runningExperiment === undefined){
 
-                    this.log.info(`DEBUG: selecting machine ${rmMetas[i].ip}`);
+                    this.log.info(`Running ${trialInfo.id} on ${rmMetas[i].ip}`);
                     rmMetas[i].runningExperiment = trialInfo.id;
                     return rmMetas[i];
                 
-                } else {  // TODO cleanup
+                } else {
 
-                    this.log.info(`DEBUG: ${rmMetas[i].ip} busy with ${rmMetas[i].runningExperiment}`);
-
+                    this.log.debug(`DEBUG: ${rmMetas[i].ip} busy with ${rmMetas[i].runningExperiment}`);
                 }
             }
         }
