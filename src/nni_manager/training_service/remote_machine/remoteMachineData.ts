@@ -38,9 +38,10 @@ export class RemoteMachineMeta {
     public gpuSummary : GPUSummary | undefined;
     public readonly gpuIndices?: string;
     public readonly maxTrialNumPerGpu?: number;
-    //TODO: initialize varialbe in constructor
+    //TODO: initialize variable in constructor
     public occupiedGpuIndexMap?: Map<number, number>;
     public readonly useActiveGpu?: boolean = false;
+    public runningExperiment : string | undefined;
 }
 
 export function parseGpuIndices(gpuIndices?: string): Set<number> | undefined {

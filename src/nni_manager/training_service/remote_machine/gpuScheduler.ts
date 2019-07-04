@@ -74,9 +74,8 @@ export class GPUScheduler {
                 return result;
             }
         } else {
-            // Trail job does not need GPU
-            const allocatedRm: RemoteMachineMeta = this.selectMachine(allRMs);
-
+            // Trial job does not need GPU
+            const allocatedRm: RemoteMachineMeta = this.selectMachine(allRMs, trialJobDetail);
             return this.allocateHost(requiredGPUNum, allocatedRm, [], trialJobDetail);
         }
         this.log.warning(`Scheduler: trialJob id ${trialJobDetail.id}, no machine can be scheduled, return TMP_NO_AVAILABLE_GPU `);
@@ -123,7 +122,7 @@ export class GPUScheduler {
             }
         });
         if (qualifiedRMs.length > 0) {
-            const allocatedRm: RemoteMachineMeta = this.selectMachine(qualifiedRMs);
+            const allocatedRm: RemoteMachineMeta = this.selectMachine(qualifiedRMs, trialJobDetail);
             const gpuInfos: GPUInfo[] | undefined = totalResourceMap.get(allocatedRm);
             if (gpuInfos !== undefined) { // should always true
                 return this.allocateHost(requiredGPUNum, allocatedRm, gpuInfos, trialJobDetail);
@@ -183,9 +182,29 @@ export class GPUScheduler {
     }
     // tslint:enable: strict-boolean-expressions
 
-    private selectMachine(rmMetas: RemoteMachineMeta[]): RemoteMachineMeta {
+    private selectMachine(rmMetas: RemoteMachineMeta[],
+                          trialInfo?: RemoteMachineTrialJobDetail): RemoteMachineMeta {
         assert(rmMetas !== undefined && rmMetas.length > 0);
 
+        if (trialInfo !== undefined){
+
+            for (let i = 0; i < rmMetas.length; i++){
+
+                if (rmMetas[i].runningExperiment === undefined){
+
+                    this.log.info(`DEBUG: selecting machine ${rmMetas[i].ip}`);
+                    rmMetas[i].runningExperiment = trialInfo.id;
+                    return rmMetas[i];
+                
+                } else {  // TODO cleanup
+
+                    this.log.info(`DEBUG: ${rmMetas[i].ip} busy with ${rmMetas[i].runningExperiment}`);
+
+                }
+            }
+        }
+
+        // If all machines are busy or there is no trialInfo, select randomly
         return randomSelect(rmMetas);
     }
 
