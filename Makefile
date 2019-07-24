@@ -70,6 +70,15 @@ build:
 	#$(_INFO) Building WebUI $(_END)
 	cd src/webui && $(NNI_YARN) && $(NNI_YARN) build
 
+
+# H3DEMA: my installation inside docker, don't test for root
+my-install: install-dependencies
+my-install: build
+my-install: install
+my-install: update-bash-config
+my-install:
+	#$(_INFO) Complete! $(_END)
+
 # All-in-one target for non-expert users
 # Installs NNI as well as its dependencies, and update bashrc to set PATH
 .PHONY: easy-install
