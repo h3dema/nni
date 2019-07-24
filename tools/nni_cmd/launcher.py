@@ -114,7 +114,7 @@ def start_rest_server(port, platform, mode, config_file_name, experiment_id=None
 
     entry_dir = get_nni_installation_path()
     entry_file = os.path.join(entry_dir, 'main.js')
-    
+
     node_command = 'node'
     if sys.platform == 'win32':
         node_command = os.path.join(entry_dir[:-3], 'Scripts', 'node.exe')
@@ -192,7 +192,7 @@ def set_remote_config(experiment_config, port, config_file_name):
     err_message = ''
     if not response or not check_response(response):
         if response is not None:
-            err_message = response.text
+            err_message = response.text + ' url:' + cluster_metadata_url(port)
             _, stderr_full_path = get_log_path(config_file_name)
             with open(stderr_full_path, 'a+') as fout:
                 fout.write(json.dumps(json.loads(err_message), indent=4, sort_keys=True, separators=(',', ':')))
@@ -458,7 +458,7 @@ def launch_experiment(args, experiment_config, mode, config_file_name, experimen
             except Exception:
                 raise Exception(ERROR_INFO % 'Restful server stopped!')
             exit(1)
-    
+
     #set frameworkcontroller config
     if experiment_config['trainingServicePlatform'] == 'frameworkcontroller':
         print_normal('Setting frameworkcontroller config...')
