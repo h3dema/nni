@@ -78,7 +78,7 @@ class Para extends React.Component<ParaProps, ParaState> {
     getParallelAxis =
         (
             dimName: Array<string>, parallelAxis: Array<Dimobj>,
-            accPara: Array<number>, eachTrialParams: Array<string>, 
+            accPara: Array<number>, eachTrialParams: Array<string>,
             lengthofTrials: number
         ) => {
             // get data for every lines. if dim is choice type, number -> toString()
@@ -105,7 +105,8 @@ class Para extends React.Component<ParaProps, ParaState> {
             // according acc to sort ydata // sort to find top percent dataset
             if (paraYdata.length !== 0) {
                 const len = paraYdata[0].length - 1;
-                paraYdata.sort((a, b) => b[len] - a[len]);
+                // paraYdata.sort((a, b) => b[len] - a[len]);
+                paraYdata.sort((a, b) => a[len] - b[len]);
             }
             const paraData = {
                 parallelAxis: parallelAxis,
@@ -553,7 +554,11 @@ class Para extends React.Component<ParaProps, ParaState> {
                                 optionFilterProp="children"
                                 onSelect={this.percentNum}
                             >
+                                <Option value="0.05">5%</Option>
+                                <Option value="0.1">10%</Option>
                                 <Option value="0.2">20%</Option>
+                                <Option value="0.3">30%</Option>
+                                <Option value="0.4">40%</Option>
                                 <Option value="0.5">50%</Option>
                                 <Option value="0.8">80%</Option>
                                 <Option value="1">100%</Option>
