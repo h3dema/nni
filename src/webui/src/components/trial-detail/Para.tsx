@@ -18,6 +18,7 @@ interface ParaState {
     dimName: Array<string>;
     swapAxisArr: Array<string>;
     percent: number;
+    sortorder: number;
     paraNodata: string;
     max: number; // graph color bar limit
     min: number;
@@ -65,6 +66,7 @@ class Para extends React.Component<ParaProps, ParaState> {
             },
             swapAxisArr: [],
             percent: 0,
+            sortorder: 0,
             paraNodata: '',
             min: 0,
             max: 1,
@@ -102,11 +104,16 @@ class Para extends React.Component<ParaProps, ParaState> {
             Object.keys(paraYdata).map(item => {
                 paraYdata[item].push(accPara[item]);
             });
-            // according acc to sort ydata // sort to find top percent dataset
+            // according acc to sort ydata
+            // sort to find top percent dataset
+            const { sortorder } = this.state;
             if (paraYdata.length !== 0) {
                 const len = paraYdata[0].length - 1;
-                // paraYdata.sort((a, b) => b[len] - a[len]);
-                paraYdata.sort((a, b) => a[len] - b[len]);
+                if (sortorder === 0) {
+                    paraYdata.sort((a, b) => a[len] - b[len]);
+                } else {
+                    paraYdata.sort((a, b) => b[len] - a[len]);
+                }
             }
             const paraData = {
                 parallelAxis: parallelAxis,
@@ -286,10 +293,19 @@ class Para extends React.Component<ParaProps, ParaState> {
 
     // get percent value number
     percentNum = (value: string) => {
-
         let vals = parseFloat(value);
         if (this._isMounted) {
             this.setState({ percent: vals }, () => {
+                this.reInit();
+            });
+        }
+    }
+
+    // h3dema
+    setSortOrder = (value: string) => {
+        let vals = parseFloat(value);
+        if (this._isMounted) {
+            this.setState({ sortorder: vals }, () => {
                 this.reInit();
             });
         }
@@ -549,7 +565,16 @@ class Para extends React.Component<ParaProps, ParaState> {
                         <Row className="meline">
                             <span>Top</span>
                             <Select
-                                style={{ width: '20%', marginRight: 10 }}
+                                style={{ width: '10%' }}
+                                optionFilterProp="children"
+                                placeholder="Down"
+                                onSelect={this.setSortOrder}
+                            >
+                                <Option value="0">Lower</Option>
+                                <Option value="1">Upper</Option>
+                            </Select>
+                            <Select
+                                style={{ width: '10%', marginRight: 10 }}
                                 placeholder="100%"
                                 optionFilterProp="children"
                                 onSelect={this.percentNum}
@@ -564,7 +589,7 @@ class Para extends React.Component<ParaProps, ParaState> {
                                 <Option value="1">100%</Option>
                             </Select>
                             <Select
-                                style={{ width: '60%' }}
+                                style={{ width: '55%' }}
                                 mode="multiple"
                                 placeholder="Please select two items to swap"
                                 onChange={this.getSwapArr}
