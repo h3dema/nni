@@ -567,7 +567,7 @@ class Para extends React.Component<ParaProps, ParaState> {
                             <Select
                                 style={{ width: '10%' }}
                                 optionFilterProp="children"
-                                placeholder="Down"
+                                placeholder="Lower"
                                 onSelect={this.setSortOrder}
                             >
                                 <Option value="0">Lower</Option>
